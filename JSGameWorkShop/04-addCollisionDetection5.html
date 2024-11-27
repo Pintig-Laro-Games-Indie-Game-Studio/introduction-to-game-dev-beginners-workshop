@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple JS Game</title>
+    <style>
+        canvas {
+            border: 2px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+    
+
+</head>
+<body>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+</body>
+
+<script>
+    //Initialize Canvas
+    const canvas = document.getElementById("gameCanvas");
+	const ctx = canvas.getContext("2d");
+
+    
+    //Game Variables
+    let player = {x: 50, y:50, size: 20, speed: 5};
+    let item = { x: randomPosition(canvas.width), y: randomPosition(canvas.height), size: 20 };
+
+
+    // Random Position Function
+    function randomPosition(max) {
+        	return Math.floor(Math.random() * (max - 20)); // Prevent item from spawning outside the canvas
+    }
+
+    /*
+    A return statement is used in programming to exit from a function and optionally pass a value back to the function's caller. It marks the end of a function's execution and specifies what value (if any) the function will provide as its result.
+    */
+
+    // Keyboard Input
+    const keys = {};
+    window.addEventListener('keydown', (e) => keys[e.key] = true);
+    window.addEventListener('keyup', (e) => keys[e.key] = false);
+
+
+
+    //Game Loop
+    function gameLoop(){
+        // Clear the Canvas
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+
+        // Move Player
+        if (keys['ArrowUp']) player.y -= player.speed;
+        if (keys['ArrowDown']) player.y += player.speed;
+        if (keys['ArrowLeft']) player.x -= player.speed;
+        if (keys['ArrowRight']) player.x += player.speed;
+
+        // Add Wall Collision Check and Keep Player Within Bounds
+        player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
+        player.y = Math.max(0, Math.min(canvas.height - player.size, player.y));
+
+        // Draw Player
+        ctx.fillStyle = 'red';
+        ctx.fillRect(player.x, player.y, player.size, player.size);
+
+        // Draw Item
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(item.x, item.y, item.size, item.size);
+        
+        // Repeat Game Loop
+        requestAnimationFrame(gameLoop);
+
+
+    }
+
+    gameLoop();
+</script>
+</html>
